@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snow Animation - WebGL (Standalone)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            z-index: 100;
+        }
+
+        .controls label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .controls input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .slider-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #5568d3;
+            transform: scale(1.2);
+        }
+
+        .color-picker-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .color-picker-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: none;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        input[type="color"]::-moz-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .color-preview {
+            flex: 1;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #666;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid red;
+            padding: 20px;
+            border-radius: 10px;
+            color: red;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="controls">
+        <div style="font-weight: bold; margin-bottom: 10px;">Режим снега:</div>
+        <label>
+            <input type="radio" name="mode" value="light" checked>
+            Лёгкий (50 слоёв)
+        </label>
+        <label>
+            <input type="radio" name="mode" value="heavy">
+            Сильный (200 слоёв)
+        </label>
+        
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Количество слоёв:</span>
+                <span class="slider-value" id="layersValue">50</span>
+            </div>
+            <input type="range" id="layersSlider" min="0" max="200" value="30" step="1">
+        </div>
+        
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Скорость падения:</span>
+                <span class="slider-value" id="speedValue">1.2</span>
+            </div>
+            <input type="range" id="speedSlider" min="0" max="5" value="0.5" step="0.1">
+        </div>
+        
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Прозрачность:</span>
+                <span class="slider-value" id="opacityValue">1.0</span>
+            </div>
+            <input type="range" id="opacitySlider" min="0" max="1" value="1.0" step="0.01">
+        </div>
+        
+        <div class="color-picker-container">
+            <div class="color-picker-label">Цвет снежинок:</div>
+            <div class="color-picker-wrapper">
+                <input type="color" id="colorPicker" value="#014298">
+                <div class="color-preview">
+                    <span id="colorHex">#014298</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
+        WebGL портирование Metal шейдера (Standalone)<br>
+        Производительность: <span id="fps">60</span> FPS
+    </div>
+
+    <script>
+        // Vertex Shader - портирован из Metal
+        const vertexShaderSource = `
+            attribute vec2 a_position;
+            varying vec2 v_uv;
+
+            void main() {
+                v_uv = a_position * 0.5 + 0.5;
+                gl_Position = vec4(a_position, 0.0, 1.0);
+            }
+        `;
+
+        // Fragment Shader - портирован из Metal fragmentMain
+        const fragmentShaderSource = `
+            precision highp float;
+            
+            uniform vec4 u_resolutionTime;
+            uniform vec4 u_mouse;
+            uniform int u_layers;
+            uniform float u_depth;
+            uniform float u_width;
+            uniform float u_speed;
+            uniform vec3 u_flakeColor;
+            uniform float u_opacity;
+
+            varying vec2 v_uv;
+
+            float mod1(float value) {
+                return value - floor(value);
+            }
+
+            vec2 mod1(vec2 value) {
+                return value - floor(value);
+            }
+
+            void main() {
+                vec2 resolution = max(u_resolutionTime.xy, vec2(1.0));
+                float iTime = u_resolutionTime.z;
+
+                mat3 p = mat3(
+                    vec3(13.323122, 23.5112, 21.71123),
+                    vec3(21.1212, 28.7312, 11.9312),
+                    vec3(21.8112, 14.7212, 61.3934)
+                );
+
+                vec2 fragCoord = v_uv * resolution;
+                vec2 uv = vec2(1.0, resolution.y / resolution.x) * fragCoord / resolution;
+
+                vec3 acc = vec3(0.0);
+                float dof = 5.0 * sin(iTime * 0.1);
+
+                for (int i = 0; i < 250; ++i) {
+                    if (i >= u_layers) break;
+                    
+                    float fi = float(i);
+                    vec2 q = uv * (1.0 + fi * u_depth);
+                    q += vec2(
+                        q.y * (u_width * mod1(fi * 7.238917) - u_width * 0.5),
+                        u_speed * iTime / (1.0 + fi * u_depth * 0.03)
+                    );
+
+                    vec3 n = vec3(floor(q), 31.189 + fi);
+                    vec3 m = floor(n) * 0.00001 + fract(n);
+                    vec3 mp = (vec3(31415.9) + m) / fract(p * m);
+                    vec3 r = fract(mp);
+
+                    vec2 s = abs(mod1(q) - 0.5 + 0.9 * r.xy - 0.45);
+                    s += 0.01 * abs(2.0 * fract(10.0 * q.yx) - 1.0);
+                    float d = 0.6 * max(s.x - s.y, s.x + s.y) + max(s.x, s.y) - 0.01;
+                    float edge = 0.005 + 0.05 * min(0.5 * abs(fi - 5.0 - dof), 1.0);
+
+                    float contribution = smoothstep(edge, -edge, d) * (r.x / (1.0 + 0.02 * fi * u_depth));
+                    acc += vec3(contribution);
+                }
+
+                float intensity = clamp(acc.x, 0.0, 1.0);
+                vec3 color = mix(vec3(1.0), u_flakeColor, intensity);
+                
+                gl_FragColor = vec4(color, u_opacity);
+            }
+        `;
+
+        // Конфигурации режимов снега
+        const snowModes = {
+            light: { layers: 30, depth: 0.5, width: 0.3, speed: 0.5 },
+            heavy: { layers: 150, depth: 0.1, width: 0.8, speed: 1.5 }
+        };
+
+        class SnowSceneWebGL {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.mode = 'light';
+                this.startTime = Date.now();
+                this.frameCount = 0;
+                this.lastFpsUpdate = Date.now();
+
+                if (!this.initWebGL()) {
+                    this.showError('WebGL не поддерживается вашим браузером');
+                    return;
+                }
+
+                this.initShaders();
+                this.initGeometry();
+                this.setupEventListeners();
+                this.resize();
+                this.animate();
+            }
+
+            initWebGL() {
+                try {
+                    this.gl = this.canvas.getContext('webgl', { alpha: true }) || this.canvas.getContext('experimental-webgl', { alpha: true });
+                    if (!this.gl) return false;
+                    
+                    this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
+                    this.gl.enable(this.gl.BLEND);
+                    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            compileShader(source, type) {
+                const shader = this.gl.createShader(type);
+                this.gl.shaderSource(shader, source);
+                this.gl.compileShader(shader);
+
+                if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+                    console.error('Shader compilation error:', this.gl.getShaderInfoLog(shader));
+                    this.gl.deleteShader(shader);
+                    return null;
+                }
+
+                return shader;
+            }
+
+            initShaders() {
+                const vertexShader = this.compileShader(vertexShaderSource, this.gl.VERTEX_SHADER);
+                const fragmentShader = this.compileShader(fragmentShaderSource, this.gl.FRAGMENT_SHADER);
+
+                this.program = this.gl.createProgram();
+                this.gl.attachShader(this.program, vertexShader);
+                this.gl.attachShader(this.program, fragmentShader);
+                this.gl.linkProgram(this.program);
+
+                if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
+                    console.error('Program linking error:', this.gl.getProgramInfoLog(this.program));
+                    return;
+                }
+
+                this.gl.useProgram(this.program);
+
+                // Получаем locations
+                this.locations = {
+                    position: this.gl.getAttribLocation(this.program, 'a_position'),
+                    resolutionTime: this.gl.getUniformLocation(this.program, 'u_resolutionTime'),
+                    mouse: this.gl.getUniformLocation(this.program, 'u_mouse'),
+                    layers: this.gl.getUniformLocation(this.program, 'u_layers'),
+                    depth: this.gl.getUniformLocation(this.program, 'u_depth'),
+                    width: this.gl.getUniformLocation(this.program, 'u_width'),
+                    speed: this.gl.getUniformLocation(this.program, 'u_speed'),
+                    flakeColor: this.gl.getUniformLocation(this.program, 'u_flakeColor'),
+                    opacity: this.gl.getUniformLocation(this.program, 'u_opacity')
+                };
+
+                // Устанавливаем начальные значения uniforms
+                const config = snowModes[this.mode];
+                this.gl.uniform1i(this.locations.layers, config.layers);
+                this.gl.uniform1f(this.locations.depth, config.depth);
+                this.gl.uniform1f(this.locations.width, config.width);
+                this.gl.uniform1f(this.locations.speed, config.speed);
+                this.gl.uniform3f(this.locations.flakeColor, 1/255, 66/255, 152/255); // #014298 - синий
+                this.gl.uniform1f(this.locations.opacity, 1.0); // Полная непрозрачность
+            }
+
+            initGeometry() {
+                // Создаём fullscreen quad (как triangle strip в Metal)
+                const positions = new Float32Array([
+                    -1.0, -1.0,
+                     1.0, -1.0,
+                    -1.0,  1.0,
+                     1.0,  1.0
+                ]);
+
+                this.positionBuffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, positions, this.gl.STATIC_DRAW);
+
+                this.gl.enableVertexAttribArray(this.locations.position);
+                this.gl.vertexAttribPointer(this.locations.position, 2, this.gl.FLOAT, false, 0, 0);
+            }
+
+            setupEventListeners() {
+                window.addEventListener('resize', () => this.resize());
+
+                document.querySelectorAll('input[name="mode"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => this.changeMode(e.target.value));
+                });
+
+                // Обработка слайдера количества слоёв
+                const layersSlider = document.getElementById('layersSlider');
+                const layersValue = document.getElementById('layersValue');
+                
+                layersSlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    layersValue.textContent = value;
+                    this.setLayers(value);
+                });
+
+                // Обработка слайдера скорости падения
+                const speedSlider = document.getElementById('speedSlider');
+                const speedValue = document.getElementById('speedValue');
+                
+                speedSlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    speedValue.textContent = value.toFixed(1);
+                    this.setSpeed(value);
+                });
+
+                // Обработка слайдера прозрачности
+                const opacitySlider = document.getElementById('opacitySlider');
+                const opacityValue = document.getElementById('opacityValue');
+                
+                opacitySlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    opacityValue.textContent = value.toFixed(2);
+                    this.setOpacity(value);
+                });
+
+                // Обработка color picker
+                const colorPicker = document.getElementById('colorPicker');
+                const colorHex = document.getElementById('colorHex');
+                
+                colorPicker.addEventListener('input', (e) => {
+                    const hex = e.target.value;
+                    colorHex.textContent = hex;
+                    this.setFlakeColor(hex);
+                });
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            changeMode(newMode) {
+                this.mode = newMode;
+                const config = snowModes[newMode];
+                
+                this.gl.uniform1i(this.locations.layers, config.layers);
+                this.gl.uniform1f(this.locations.depth, config.depth);
+                this.gl.uniform1f(this.locations.width, config.width);
+                this.gl.uniform1f(this.locations.speed, config.speed);
+
+                // Синхронизируем слайдеры с выбранным режимом
+                const layersSlider = document.getElementById('layersSlider');
+                const layersValue = document.getElementById('layersValue');
+                const speedSlider = document.getElementById('speedSlider');
+                const speedValue = document.getElementById('speedValue');
+                
+                layersSlider.value = config.layers;
+                layersValue.textContent = config.layers;
+                
+                speedSlider.value = config.speed;
+                speedValue.textContent = config.speed.toFixed(1);
+
+                console.log(`Режим изменён на: ${newMode}`, config);
+            }
+
+            setLayers(layers) {
+                this.gl.uniform1i(this.locations.layers, layers);
+                console.log(`Количество слоёв: ${layers}`);
+            }
+
+            setSpeed(speed) {
+                this.gl.uniform1f(this.locations.speed, speed);
+                console.log(`Скорость падения: ${speed}`);
+            }
+
+            setOpacity(opacity) {
+                this.gl.uniform1f(this.locations.opacity, opacity);
+                console.log(`Прозрачность: ${opacity}`);
+            }
+
+            setFlakeColor(hexColor) {
+                // Конвертируем HEX в RGB (0.0-1.0)
+                const r = parseInt(hexColor.slice(1, 3), 16) / 255;
+                const g = parseInt(hexColor.slice(3, 5), 16) / 255;
+                const b = parseInt(hexColor.slice(5, 7), 16) / 255;
+                
+                this.gl.uniform3f(this.locations.flakeColor, r, g, b);
+                console.log(`Цвет снежинок: ${hexColor} (${r.toFixed(2)}, ${g.toFixed(2)}, ${b.toFixed(2)})`);
+            }
+
+            updateFPS() {
+                this.frameCount++;
+                const now = Date.now();
+                
+                if (now - this.lastFpsUpdate >= 1000) {
+                    const fps = Math.round(this.frameCount * 1000 / (now - this.lastFpsUpdate));
+                    document.getElementById('fps').textContent = fps;
+                    this.frameCount = 0;
+                    this.lastFpsUpdate = now;
+                }
+            }
+
+            render() {
+                const currentTime = (Date.now() - this.startTime) / 1000.0;
+
+                // Обновляем uniforms
+                this.gl.uniform4f(
+                    this.locations.resolutionTime,
+                    this.canvas.width,
+                    this.canvas.height,
+                    currentTime,
+                    0.0
+                );
+
+                this.gl.uniform4f(
+                    this.locations.mouse,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                );
+
+                // Рендерим
+                this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+                this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                this.render();
+                this.updateFPS();
+            }
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.innerHTML = `<strong>Ошибка:</strong><br>${message}`;
+                document.body.appendChild(errorDiv);
+            }
+        }
+
+        // Инициализация при загрузке
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                new SnowSceneWebGL();
+                console.log('✅ Snow animation initialized - портировано из Metal (Standalone WebGL)');
+            } catch (error) {
+                console.error('❌ Initialization error:', error);
+                document.body.innerHTML += `<div class="error"><strong>Ошибка инициализации:</strong><br>${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
+

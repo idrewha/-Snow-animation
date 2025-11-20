@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snow Animation - Выбор версии</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .version-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .version-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .version-card.recommended {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-color: #667eea;
+        }
+
+        .version-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .version-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .version-features {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .version-features li {
+            color: #555;
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .version-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .version-button {
+            display: inline-block;
+            width: 100%;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .version-button:hover {
+            background: #5568d3;
+            transform: scale(1.02);
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .emoji {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🌨️</div>
+        <h1>Snow Animation</h1>
+        <div class="subtitle">Портирование Metal шейдера на WebGL</div>
+
+        <div class="version-card recommended" onclick="location.href='index-standalone.html'">
+            <div class="version-title">
+                Standalone версия
+                <span class="version-badge">Рекомендуется</span>
+            </div>
+            <div class="version-description">
+                Полностью автономная версия на чистом WebGL. Работает сразу после открытия файла.
+            </div>
+            <ul class="version-features">
+                <li>Не требует локального сервера</li>
+                <li>Открывается через file:// протокол</li>
+                <li>Нет внешних зависимостей</li>
+                <li>Слайдер слоёв (0-200) и скорости (0-5)</li>
+                <li>Размер: ~8 KB</li>
+                <li>Чистый WebGL</li>
+            </ul>
+            <a href="index-standalone.html" class="version-button">
+                🚀 Запустить Standalone
+            </a>
+        </div>
+
+        <div class="version-card" onclick="location.href='index.html'">
+            <div class="version-title">
+                Three.js версия
+            </div>
+            <div class="version-description">
+                Версия использующая Three.js библиотеку. Требует запуск локального сервера.
+            </div>
+            <ul class="version-features">
+                <li>Использует Three.js r150</li>
+                <li>Проще для дальнейшей доработки</li>
+                <li>Слайдер слоёв (0-200) и скорости (0-5)</li>
+                <li>Нужен локальный сервер (CORS)</li>
+                <li>Размер: ~6 KB + 580 KB Three.js</li>
+            </ul>
+            <a href="index.html" class="version-button">
+                📦 Открыть с Three.js
+            </a>
+        </div>
+
+        <div class="footer">
+            Оригинальный Metal шейдер: <code>../snow-success/SnowShader.metal</code><br>
+            Портирование: WebGL • GLSL • Ноябрь 2025
+        </div>
+    </div>
+
+    <script>
+        console.log('🌨️ Snow Animation - выбери версию для запуска');
+        console.log('Standalone: работает без сервера');
+        console.log('Three.js: требует локальный сервер');
+    </script>
+</body>
+</html>
+

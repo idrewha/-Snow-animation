@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Снег на фоне -->
+    <com.snowsuccess.SnowView
+        android:id="@+id/snowView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Кнопка настроек в правом верхнем углу -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_preferences"
+        android:contentDescription="Настройки снега"
+        app:tint="@android:color/white" />
+
+    <!-- FPS Counter в левом нижнем углу -->
+    <TextView
+        android:id="@+id/fpsCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:background="#CCFFFFFF"
+        android:padding="8dp"
+        android:text="FPS: 60"
+        android:textColor="#666666"
+        android:textSize="12sp" />
+
+</FrameLayout>
+

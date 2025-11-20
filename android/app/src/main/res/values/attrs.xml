@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- XML атрибуты для SnowView -->
+    <declare-styleable name="SnowView">
+        <attr name="snowLayers" format="integer" />
+        <attr name="snowSpeed" format="float" />
+        <attr name="snowDepth" format="float" />
+        <attr name="snowWidth" format="float" />
+        <attr name="snowOpacity" format="float" />
+        <attr name="snowColor" format="color" />
+    </declare-styleable>
+</resources>
+

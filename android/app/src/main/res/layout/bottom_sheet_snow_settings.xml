@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Заголовок -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚙️ Настройки снега"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <!-- Разделитель -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Режимы снега -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Режим снега:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <RadioGroup
+        android:id="@+id/modeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/radioLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❄️ Лёгкий (50 слоёв)"
+            android:textColor="#000000"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioHeavy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="❄️❄️❄️ Сильный (200 слоёв)"
+            android:textColor="#000000" />
+    </RadioGroup>
+
+    <!-- Разделитель -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Количество слоёв -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Количество слоёв:"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/layersValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50"
+            android:textColor="#667eea"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minWidth="40dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/layersSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Скорость падения -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Скорость падения:"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/speedValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.2"
+            android:textColor="#667eea"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minWidth="40dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/speedSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Прозрачность -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Прозрачность:"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/opacityValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0"
+            android:textColor="#667eea"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minWidth="40dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/opacitySeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Разделитель -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Цвет снежинок -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Цвет снежинок:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Preset цвета -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Быстрый выбор:"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <View
+            android:id="@+id/colorWhite"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/color_circle"
+            android:backgroundTint="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/colorGray"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/color_circle"
+            android:backgroundTint="#808080"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/colorBlue"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/color_circle"
+            android:backgroundTint="#87CEEB"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/colorPink"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/color_circle"
+            android:backgroundTint="#FFB6C1"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/colorYellow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/color_circle"
+            android:backgroundTint="#FFD700"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- Кнопка закрыть -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnClose"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="✓ Готово"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        style="@style/Widget.MaterialComponents.Button" />
+
+</LinearLayout>
+
