@@ -2,12 +2,10 @@
 
 ## 🎥 Демо
 
-<video width="100%" autoplay loop muted playsinline>
-  <source src="https://github.com/idrewha/-Snow-animation/raw/main/demo/snow-demo.mp4" type="video/mp4">
+<video width="100%" autoplay loop muted playsinline controls>
+  <source src="./demo/snow-demo.mp4" type="video/mp4">
   Ваш браузер не поддерживает видео тег.
 </video>
-
-<!-- Если видео в другой папке или с другим именем, замени путь выше -->
 
 ---
 
