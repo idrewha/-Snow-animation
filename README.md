@@ -1,5 +1,19 @@
 # ❄️ Snow Success - Multi-Platform Snow Animation
 
+## 🎥 Демо
+
+<!-- Замените ссылку на ваше видео -->
+[![Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+
+<!-- Или используйте прямую ссылку на YouTube/Vimeo -->
+<!-- https://www.youtube.com/watch?v=YOUR_VIDEO_ID -->
+<!-- https://vimeo.com/YOUR_VIDEO_ID -->
+
+<!-- Или загрузите видео в папку и используйте относительный путь -->
+<!-- ![Demo Video](./demo/snow-demo.mp4) -->
+
+---
+
 Красивая процедурная анимация падающего снега для **iOS**, **Android** и **Web**.
 
 Полностью GPU-accelerated, без внешних зависимостей, готова для production использования.
